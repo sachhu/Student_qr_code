@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Generator</title>
+</head>
+<body>
+  <h2>QR Code Generator</h2>
+  <input type="text" id="idInput" placeholder="Enter ID">
+  <button onclick="generateAndDownload()">Generate & Download QR</button>
+
+  <script>
+    function generateAndDownload() {
+      const id = document.getElementById('idInput').value.trim();
+      if (!id) {
+        alert("Please enter an ID.");
+        return;
+      }
+
+      const qrUrl = `https://quickchart.io/qr?size=500x500&text=${encodeURIComponent(
+        'https://script.google.com/macros/s/AKfycbzP9XFg1c_6GhJPmECnBqGsZ_ay00Rn-Y8w-G6YYvCE_cxtIK7YEGQzTftYnkzVFu4J/exec?id=' + id
+      )}`;
+
+      fetch(qrUrl)
+        .then(res => res.blob())
+        .then(blob => {
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = `${id}.png`;
+          link.click();
+        })
+        .catch(err => {
+          console.error('QR generation failed:', err);
+          alert('Failed to generate QR code.');
+        });
+    }
+  </script>
+</body>
+</html>
